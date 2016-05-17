@@ -49,6 +49,7 @@ public class MovieWS {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response saveMovie(Movie movie) {
 		movieDao.save(movie);
+		movieDao.savePicture(movie.getPicture(), movie.getId());
 		return Response.status(201).entity(movie).build();
 	}
 

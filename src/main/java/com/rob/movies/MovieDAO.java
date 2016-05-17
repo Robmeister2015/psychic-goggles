@@ -1,5 +1,7 @@
 package com.rob.movies;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -7,6 +9,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
+import org.apache.commons.io.FileUtils;
 
 @Stateless
 @LocalBean
@@ -48,5 +52,15 @@ public class MovieDAO {
 	
 	public Movie getMovie(String title) {
 		return em.find(Movie.class, title);
+	}
+	
+	public void savePicture(String picLocation, int id){
+		File source = new File(picLocation);
+		File dest = new File(id + ".jpg");
+		try {
+		    FileUtils.copyFile(source, dest);
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
 	}
 }
