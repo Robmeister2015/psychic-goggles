@@ -1,5 +1,6 @@
 package com.rob.movies;
 
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -13,6 +14,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 // comment
@@ -20,6 +22,12 @@ import javax.ws.rs.core.Response;
 @Stateless
 @LocalBean
 public class MovieWS {
+	
+	String[] queryParameters;
+	StringBuilder erroneousOrMissingData = new StringBuilder();
+	static String[] columnNames = { "title", "description", "director", "country", "year", "budget", "rentalPrice",
+			"onLoan", "picture" };
+	private static Hashtable<String, Object> columnsAndValues = new Hashtable<String, Object>();
 
 	@EJB
 	private MovieDAO movieDao;
@@ -44,7 +52,28 @@ public class MovieWS {
 			return Response.status(200).entity(movieMatch).build();
 		}
 	}
-
+	
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("/search")
+	public void findMovieByParams(@QueryParam("title") String title, @QueryParam("director") String director,
+			@QueryParam("budget") Double budget, @QueryParam("rentalPrice") Double rentalPrice, @QueryParam("description")
+			String description, @QueryParam("country") String country, @QueryParam("yeara") Integer yeara, @QueryParam("onLoan") String onLoan,
+			@QueryParam("picture") String picture){
+		
+		Object[] queryParameters = {title, description, yeara, director, country, budget, rentalPrice, onLoan, picture};
+		
+		for(int i = 0; i < queryParameters.length; i ++){
+		if(DataInputValidator.validateData(queryParameters[i])){
+			columnsAndValues.put(columnNames[i], queryParameters[i]);
+		}else{
+			erroneousOrMissingData.append(columnNames[i] + " ");
+		}
+		}
+		String queryToExecute = DynamicQueryBuilder.buildQuery(columnsAndValues);
+		
+	}
+	
 	@PUT
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response saveMovie(Movie movie) {

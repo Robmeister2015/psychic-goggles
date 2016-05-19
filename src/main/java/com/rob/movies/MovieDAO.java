@@ -2,6 +2,9 @@ package com.rob.movies;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -9,6 +12,11 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.io.FileUtils;
 
@@ -62,5 +70,25 @@ public class MovieDAO {
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
+	}
+	
+	public void getMovieBasedOnUnknownNumberOfCriteria(Hashtable columnsAndValues){
+		CriteriaBuilder qb = em.getCriteriaBuilder();
+	    CriteriaQuery<Object> cq = qb.createQuery();
+	    List<Predicate> predicates = new ArrayList<Predicate>();
+	    Enumeration e = columnsAndValues.keys();
+		Root<Movie> movie = cq.from(Movie.class);
+		
+		while(e.hasMoreElements()){
+	        predicates.add(
+	                qb.equal(movie.get("someAttribute"), param1));
+		}
+		 cq.select(movie)
+         .where(predicates.toArray(new Predicate[]{}));
+ //execute query and do something with result
+ em.createQuery(cq).getResultList();
+	    }
+	    
+	   
 	}
 }

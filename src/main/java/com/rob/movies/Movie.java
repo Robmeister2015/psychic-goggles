@@ -30,8 +30,8 @@ public class Movie {
 	@Column(name = "country")
 	private String country;
 
-	@Column(name = "year")
-	private int year;
+	@Column(name = "yeara")
+	private int yeara;
 
 	@Column(name = "budget")
 	private double budget;
@@ -86,11 +86,11 @@ public class Movie {
 	}
 
 	public int getYear() {
-		return year;
+		return yeara;
 	}
 
-	public void setYear(int year) {
-		this.year = year;
+	public void setYear(int yeara) {
+		this.yeara = yeara;
 	}
 
 	public double getBudget() {
