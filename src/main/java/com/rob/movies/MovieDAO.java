@@ -78,10 +78,6 @@ public class MovieDAO {
 		em.remove(m);
 	}
 
-	public Movie getMovie(String title) {
-		return em.find(Movie.class, title);
-	}
-
 	public void savePicture(String picLocation, int id) {
 		File source = new File(picLocation);
 		File dest = new File(id + ".jpg");
@@ -93,26 +89,31 @@ public class MovieDAO {
 		}
 	}
 
-	public List<Movie> getMovieBasedOnUnknownNumberOfCriteria(Hashtable columnsAndValues) {
-		CriteriaBuilder qb = em.getCriteriaBuilder();
-		CriteriaQuery<Object> cq = qb.createQuery();
+	/*
+	 * Uses a Hashtable with key/value pairs to insert column names and data
+	 * into the query
+	 */
+
+	public List<Movie> getMovieBasedOnUnknownNumberOfCriteria(Hashtable<String, Object> columnsAndValues) {
+
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		CriteriaQuery<Object> criteriaQuery = criteriaBuilder.createQuery();
 		List<Predicate> predicates = new ArrayList<Predicate>();
-		Enumeration e = columnsAndValues.keys();
-		Root<Movie> movie = cq.from(Movie.class);
-		System.out.println("Size of hashtable: " + columnsAndValues.size());
-		while (e.hasMoreElements()) {
-			String s = (String) e.nextElement();
-			predicates.add(qb.equal(movie.get(s), columnsAndValues.get(s)));
-			System.out.println(s + " " + columnsAndValues.get(s));
+
+		Enumeration<?> columnKeys = columnsAndValues.keys();
+		Root<Movie> movie = criteriaQuery.from(Movie.class);
+
+		while (columnKeys.hasMoreElements()) {
+			String dataForColumn = (String) columnKeys.nextElement();
+			predicates.add(criteriaBuilder.equal(movie.get(dataForColumn), columnsAndValues.get(dataForColumn)));
 		}
-		cq.multiselect(movie).where(predicates.toArray(new Predicate[] {}));
+		criteriaQuery.multiselect(movie).where(predicates.toArray(new Predicate[] {}));
 
-		em.createQuery(cq).getResultList();
-		System.out.println("Here we are.");
+		em.createQuery(criteriaQuery).getResultList();
 
-		List<Object> obj = em.createQuery(cq).getResultList();
+		List<Object> returnedMoviesAsObjects = em.createQuery(criteriaQuery).getResultList();
 		List<Movie> movies = new ArrayList<Movie>();
-		for (Object o : obj) {
+		for (Object o : returnedMoviesAsObjects) {
 			Movie m = (Movie) o;
 			movies.add(m);
 		}

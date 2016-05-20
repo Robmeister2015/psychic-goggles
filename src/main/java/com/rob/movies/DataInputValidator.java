@@ -4,6 +4,10 @@ import java.util.Calendar;
 
 public class DataInputValidator {
 
+	private static int EMPTY_VARIABLE = 1;
+	private static int INVALID_VARIABLE = 2;
+	private static int VARIABLE_IS_ACCEPTED = 3;
+	
 	private static int columnCounterForYearValidation;
 
 	/*
@@ -11,32 +15,27 @@ public class DataInputValidator {
 	 * appropriate method
 	 */
 
-	public static boolean validateInputData(Object objectToValidate) {
-		System.out.println("in data input validator validate data method");
+	public static int validateInputData(Object objectToValidate) {
+		
 		if (columnCounterForYearValidation == 4 && objectToValidate instanceof Integer) {
 			Integer integer = (Integer) objectToValidate;
-			if (validateYear(integer))
-				return true;
+			return validateYear(integer);
 		}
 
 		else if (objectToValidate instanceof String) {
-			System.out.println("in string");
 			columnCounterForYearValidation++;
 			String string = (String) objectToValidate;
-			if (validateString(string))
-				return true;
+			return validateString(string);
 
 		} else if (objectToValidate instanceof Double) {
 			Double doubleValue = (Double) objectToValidate;
-			if (validateDouble(doubleValue))
-				return true;
+			return validateDouble(doubleValue);
 
 		} else if (objectToValidate instanceof Integer) {
 			Integer integer = (Integer) objectToValidate;
-			if (validateInt(integer))
-				return true;
+			return validateInt(integer);
 		}
-		return false;
+		return EMPTY_VARIABLE;
 	}
 
 	/*
@@ -47,36 +46,35 @@ public class DataInputValidator {
 		columnCounterForYearValidation = 0;
 	}
 
-	private static boolean validateString(String validateMe) {
+	private static int validateString(String validateMe) {
 
 		if (!validateMe.equals(null) && !validateMe.equals(""))
-			return true;
+			return 3;
 
-		return false;
+		return EMPTY_VARIABLE;
 	}
 
-	private static boolean validateDouble(Double validateMe) {
+	private static int validateDouble(Double validateMe) {
 
-		if (validateMe < 0)
-			return false;
+		if(validateMe <= 0) return EMPTY_VARIABLE;
+		
 
-		return true;
+		return VARIABLE_IS_ACCEPTED;
 	}
 
-	private static boolean validateInt(int validateMe) {
+	private static int validateInt(int validateMe) {
 
-		if (validateMe < 0)
-			return false;
+		if (validateMe <= 0) return EMPTY_VARIABLE;
 
-		return true;
+		return VARIABLE_IS_ACCEPTED;
 	}
 
-	private static boolean validateYear(int year) {
+	private static int validateYear(int year) {
 
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-		if (year < 1900 || year > currentYear)
-			return false;
-
-		return true;
+		
+		if (year < 1900 || year > currentYear) return INVALID_VARIABLE;
+		
+		return VARIABLE_IS_ACCEPTED;
 	}
 }

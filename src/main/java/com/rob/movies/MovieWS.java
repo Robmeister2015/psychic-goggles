@@ -72,19 +72,32 @@ public class MovieWS {
 			@QueryParam("yearMade") Integer yearMade, @QueryParam("onLoan") String onLoan,
 			@QueryParam("picture") String picture) {
 
-		Object[] parametersDerivedFromUrl = { title, description, director, country, yearMade, budget, rentalPrice, onLoan,
-				picture };
+		Object[] parametersDerivedFromUrl = { title, description, director, country, yearMade, budget, rentalPrice,
+				onLoan, picture };
 
 		for (int i = 0; i < parametersDerivedFromUrl.length; i++) {
-			if (DataInputValidator.validateInputData(parametersDerivedFromUrl[i])) {
+			if (DataInputValidator.validateInputData(parametersDerivedFromUrl[i]) == 2) {
+				erroneousOrMissingData.append(columnNames[i] + ": " + parametersDerivedFromUrl[i] + ", ");
+
+			} else if (DataInputValidator.validateInputData(parametersDerivedFromUrl[i]) == 3) {
 				columnsAndValues.put(columnNames[i], parametersDerivedFromUrl[i]);
-			} else {
-				erroneousOrMissingData.append(columnNames[i] + " ");
 			}
 		}
 		List<Movie> movie = movieDao.getMovieBasedOnUnknownNumberOfCriteria(columnsAndValues);
 		DataInputValidator.setColumnCounter();
 		columnsAndValues.clear();
+
+		if (erroneousOrMissingData.length() > 0) {
+			return Response.status(200)
+					.entity("<html><h1> The following columns are missing or filled out with erroneous data</h1><br><h2>"
+							+ erroneousOrMissingData.toString() + "<h2></html>")
+					.build();
+		}
+		if (movie.size() == 0) {
+			System.out.println(movie.size());
+			return Response.status(200).entity("<html>No data to return</html>").build();
+		}
+
 		return Response.status(200).entity(movie).build();
 
 	}
