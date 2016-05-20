@@ -25,7 +25,7 @@ import javax.ws.rs.core.Response;
 public class MovieWS {
 
 	private StringBuilder erroneousOrMissingData = new StringBuilder();
-	private static String[] columnNames = { "title", "description", "director", "country", "yeara", "budget",
+	private static String[] columnNames = { "title", "description", "director", "country", "yearMade", "budget",
 			"rentalPrice", "onLoan", "picture" };
 
 	private static Hashtable<String, Object> columnsAndValues = new Hashtable<String, Object>();
@@ -69,10 +69,10 @@ public class MovieWS {
 	public Response findMovieByParams(@QueryParam("title") String title, @QueryParam("director") String director,
 			@QueryParam("budget") Double budget, @QueryParam("rentalPrice") Double rentalPrice,
 			@QueryParam("description") String description, @QueryParam("country") String country,
-			@QueryParam("yeara") Integer yeara, @QueryParam("onLoan") String onLoan,
+			@QueryParam("yearMade") Integer yearMade, @QueryParam("onLoan") String onLoan,
 			@QueryParam("picture") String picture) {
 
-		Object[] parametersDerivedFromUrl = { title, description, director, country, yeara, budget, rentalPrice, onLoan,
+		Object[] parametersDerivedFromUrl = { title, description, director, country, yearMade, budget, rentalPrice, onLoan,
 				picture };
 
 		for (int i = 0; i < parametersDerivedFromUrl.length; i++) {

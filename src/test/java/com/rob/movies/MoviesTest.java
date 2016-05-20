@@ -42,7 +42,7 @@ public class MoviesTest {
 		assertEquals("This is a description", movie.getDescription());
 		assertEquals(12.50, movie.getBudget(), 0.001);
 		assertEquals(220, movie.getRentalPrice(), 0.001);
-		assertEquals(2010, movie.getYear());
+		assertEquals(2010, movie.getYearMade());
 		assertEquals("Ireland", movie.getCountry());
 		assertEquals("y", movie.getOnLoan());
 		assertEquals("C:/something/something", movie.getPicture());

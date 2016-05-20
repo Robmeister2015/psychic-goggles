@@ -65,7 +65,7 @@ public class MovieDAO {
 		m.setPicture(movie.getPicture());
 		m.setRentalPrice(movie.getRentalPrice());
 		m.setTitle(movie.getTitle());
-		m.setYear(movie.getYear());
+		m.setYear(movie.getYearMade());
 		em.persist(m);
 	}
 
@@ -85,6 +85,7 @@ public class MovieDAO {
 	public void savePicture(String picLocation, int id) {
 		File source = new File(picLocation);
 		File dest = new File(id + ".jpg");
+		System.out.println("File: " + dest.exists());
 		try {
 			FileUtils.copyFile(source, dest);
 		} catch (IOException e) {
