@@ -79,6 +79,8 @@ public class MovieDAO {
 	}
 
 	public void savePicture(String picLocation, int id) {
+		
+		picLocation = picLocation.replace('\\', '/');
 		File source = new File(picLocation);
 		File dest = new File(id + ".jpg");
 		System.out.println("File: " + dest.exists());
