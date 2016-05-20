@@ -32,7 +32,7 @@ public class MoviesTest {
 		movie.setDirector("Senor Spielbergo");
 		movie.setBudget(12.50);
 		movie.setRentalPrice(220);
-		movie.setYear(2010);
+		movie.setYearMade(2010);
 		movie.setCountry("Ireland");
 		movie.setOnLoan("y");
 		movie.setPicture("C:/something/something");

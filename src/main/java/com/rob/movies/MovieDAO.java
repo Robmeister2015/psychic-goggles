@@ -65,7 +65,7 @@ public class MovieDAO {
 		m.setPicture(movie.getPicture());
 		m.setRentalPrice(movie.getRentalPrice());
 		m.setTitle(movie.getTitle());
-		m.setYear(movie.getYearMade());
+		m.setYearMade(movie.getYearMade());
 		em.persist(m);
 	}
 

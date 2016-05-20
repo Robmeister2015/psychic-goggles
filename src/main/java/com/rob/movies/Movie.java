@@ -89,7 +89,7 @@ public class Movie {
 		return yearMade;
 	}
 
-	public void setYear(int yearMade) {
+	public void setYearMade(int yearMade) {
 		this.yearMade = yearMade;
 	}
 
