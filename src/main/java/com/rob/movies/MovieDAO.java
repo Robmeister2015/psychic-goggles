@@ -79,11 +79,11 @@ public class MovieDAO {
 	}
 
 	public void savePicture(String picLocation, int id) {
-		
+		System.out.println(picLocation);
 		picLocation = picLocation.replace('\\', '/');
 		File source = new File(picLocation);
 		File dest = new File(id + ".jpg");
-		System.out.println("File: " + dest.exists());
+		System.out.println("File: " + source.exists());
 		try {
 			FileUtils.copyFile(source, dest);
 		} catch (IOException e) {
