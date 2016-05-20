@@ -26,21 +26,37 @@ public class MovieDAO {
 
 	@PersistenceContext
 	private EntityManager em;
-	
+
+	/*
+	 * Method to get all movies from the database
+	 */
+
 	public List<Movie> getAllMovies() {
-		Query query=em.createQuery("SELECT m FROM Movie m");
+		Query query = em.createQuery("SELECT m FROM Movie m");
 		return query.getResultList();
 	}
-	
+
+	/*
+	 * Method that fetches a movie by an ID appended to the URL
+	 */
+
 	public Movie getMovie(int id) {
 		return em.find(Movie.class, id);
 	}
-	
-	public void save(Movie movie){
+
+	/*
+	 * Method that saves a movie to the database
+	 */
+
+	public void save(Movie movie) {
 		em.persist(movie);
 	}
-	
-	public void update(Movie movie){
+
+	/*
+	 * This method updates an entry in the database with the given details
+	 */
+
+	public void update(Movie movie) {
 		Movie m = em.find(Movie.class, movie.getId());
 		m.setBudget(movie.getBudget());
 		m.setCountry(movie.getCountry());
@@ -52,43 +68,54 @@ public class MovieDAO {
 		m.setYear(movie.getYear());
 		em.persist(m);
 	}
-	
-	public void remove(int id){
+
+	/*
+	 * This method removes a movie from the database
+	 */
+
+	public void remove(int id) {
 		Movie m = em.find(Movie.class, id);
-		  em.remove(m);
+		em.remove(m);
 	}
-	
+
 	public Movie getMovie(String title) {
 		return em.find(Movie.class, title);
 	}
-	
-	public void savePicture(String picLocation, int id){
+
+	public void savePicture(String picLocation, int id) {
 		File source = new File(picLocation);
 		File dest = new File(id + ".jpg");
 		try {
-		    FileUtils.copyFile(source, dest);
+			FileUtils.copyFile(source, dest);
 		} catch (IOException e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
-	
-	public void getMovieBasedOnUnknownNumberOfCriteria(Hashtable columnsAndValues){
+
+	public List<Movie> getMovieBasedOnUnknownNumberOfCriteria(Hashtable columnsAndValues) {
 		CriteriaBuilder qb = em.getCriteriaBuilder();
-	    CriteriaQuery<Object> cq = qb.createQuery();
-	    List<Predicate> predicates = new ArrayList<Predicate>();
-	    Enumeration e = columnsAndValues.keys();
+		CriteriaQuery<Object> cq = qb.createQuery();
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		Enumeration e = columnsAndValues.keys();
 		Root<Movie> movie = cq.from(Movie.class);
-		
-		while(e.hasMoreElements()){
-	        predicates.add(
-	                qb.equal(movie.get("someAttribute"), param1));
+		System.out.println("Size of hashtable: " + columnsAndValues.size());
+		while (e.hasMoreElements()) {
+			String s = (String) e.nextElement();
+			predicates.add(qb.equal(movie.get(s), columnsAndValues.get(s)));
+			System.out.println(s + " " + columnsAndValues.get(s));
 		}
-		 cq.select(movie)
-         .where(predicates.toArray(new Predicate[]{}));
- //execute query and do something with result
- em.createQuery(cq).getResultList();
-	    }
-	    
-	   
+		cq.multiselect(movie).where(predicates.toArray(new Predicate[] {}));
+
+		em.createQuery(cq).getResultList();
+		System.out.println("Here we are.");
+
+		List<Object> obj = em.createQuery(cq).getResultList();
+		List<Movie> movies = new ArrayList<Movie>();
+		for (Object o : obj) {
+			Movie m = (Movie) o;
+			movies.add(m);
+		}
+		return movies;
+
 	}
 }

@@ -7,7 +7,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 public class DynamicQueryBuilder {
 
-	private static String[] columnNames = { "title", "description", "director", "country", "year", "budget",
+	private static String[] columnNames = { "title", "description", "director", "country", "yeara", "budget",
 			"rentalPrice", "onLoan", "picture" };
 
 	
