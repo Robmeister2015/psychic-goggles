@@ -1,8 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.rob.movies.MovieWSIT
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 9.063 sec <<< FAILURE! - in com.rob.movies.MovieWSIT
-testGetRequestToGetAllEntities(com.rob.movies.MovieWSIT)  Time elapsed: 1.375 sec  <<< ERROR!
-java.net.ConnectException: Connection refused: connect
-	at com.rob.movies.MovieWSIT.testGetRequestToGetAllEntities(MovieWSIT.java:66)
-

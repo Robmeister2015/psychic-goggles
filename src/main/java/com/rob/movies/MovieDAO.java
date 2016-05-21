@@ -82,10 +82,10 @@ public class MovieDAO {
 		System.out.println(picLocation);
 		picLocation = picLocation.replace('\\', '/');
 		File source = new File(picLocation);
-		File dest = new File(id + ".jpg");
+		File dest = new File("C:/Users/A00226084/" + id + ".jpg");
 		System.out.println("File: " + source.exists());
 		try {
-			FileUtils.copyFile(source, dest);
+			FileUtils.copyFileToDirectory(source, dest);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

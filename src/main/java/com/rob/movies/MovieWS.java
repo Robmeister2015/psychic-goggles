@@ -1,5 +1,6 @@
 package com.rob.movies;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -24,7 +25,6 @@ import javax.ws.rs.core.Response;
 @LocalBean
 public class MovieWS {
 
-	private StringBuilder erroneousOrMissingData = new StringBuilder();
 	private static String[] columnNames = { "title", "description", "director", "country", "yearMade", "budget",
 			"rentalPrice", "onLoan", "picture" };
 
@@ -72,27 +72,29 @@ public class MovieWS {
 			@QueryParam("yearMade") Integer yearMade, @QueryParam("onLoan") String onLoan,
 			@QueryParam("picture") String picture) {
 
+		System.out.println("here we are at the transmission party");
 		Object[] parametersDerivedFromUrl = { title, description, director, country, yearMade, budget, rentalPrice,
 				onLoan, picture };
 
-		for (int i = 0; i < parametersDerivedFromUrl.length; i++) {
-			if (DataInputValidator.validateInputData(parametersDerivedFromUrl[i]) == 2) {
-				erroneousOrMissingData.append(columnNames[i] + ": " + parametersDerivedFromUrl[i] + ", ");
-
-			} else if (DataInputValidator.validateInputData(parametersDerivedFromUrl[i]) == 3) {
-				columnsAndValues.put(columnNames[i], parametersDerivedFromUrl[i]);
-			}
+		StringBuilder erroneousOrMissingData = OtherValidator.ValidateData(parametersDerivedFromUrl);
+		ArrayList<Integer> invalidColumns = OtherValidator.getInvalidColumns();
+		
+		for(Integer i : invalidColumns){
+			columnsAndValues.put(columnNames[i], parametersDerivedFromUrl[i]);
 		}
-		List<Movie> movie = movieDao.getMovieBasedOnUnknownNumberOfCriteria(columnsAndValues);
-		DataInputValidator.setColumnCounter();
-		columnsAndValues.clear();
-
+				
 		if (erroneousOrMissingData.length() > 0) {
 			return Response.status(200)
 					.entity("<html><h1> The following columns are missing or filled out with erroneous data</h1><br><h2>"
 							+ erroneousOrMissingData.toString() + "<h2></html>")
 					.build();
 		}
+		
+		List<Movie> movie = movieDao.getMovieBasedOnUnknownNumberOfCriteria(columnsAndValues);
+		DataInputValidator.setColumnCounter();
+		columnsAndValues.clear();
+
+		
 		if (movie.size() == 0) {
 			System.out.println(movie.size());
 			return Response.status(200).entity("<html>No data to return</html>").build();
